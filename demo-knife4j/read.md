@@ -1,0 +1,6 @@
+启动后访问http://localhost:port/doc.html
+
+若出现该错误org.springframework.context.ApplicationContextException: Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
+是因为Swagger和SpringBoot版本的问题导致，在application.yml中添加代码中配置即可解决问题
+
+原因是，在springboot2.6.X中将springMVC默认路径匹配策略从AntPathNatcher更改为PathPatternParser导致出错，解决办法是matching-strategy切换回之前ant_path_matcher
