@@ -8,29 +8,6 @@ package com.jkx.algorithm.practice;
  */
 public class BinarySearch {
 
-    public static void main(String[] args) {
-        int[] sortedArray = {1, 2, 4, 7, 9, 9, 9, 9, 9, 11, 23, 26, 58};
-        BinarySearch binarySearch = new BinarySearch();
-        System.out.println("========findEqual");
-        System.out.println(binarySearch.findEqual(sortedArray, 6)); // -1
-        System.out.println(binarySearch.findEqual(sortedArray, 7)); // 3
-        System.out.println(binarySearch.findEqual(sortedArray, 0)); // -1
-        System.out.println(binarySearch.findEqual(sortedArray, 9)); // 6
-        System.out.println(binarySearch.findEqual(sortedArray, 100)); // -1
-        System.out.println("========findFirstEqual");
-        System.out.println(binarySearch.findFirstEqual(sortedArray, 6)); // -1
-        System.out.println(binarySearch.findFirstEqual(sortedArray, 7)); // 3
-        System.out.println(binarySearch.findFirstEqual(sortedArray, 0)); // -1
-        System.out.println(binarySearch.findFirstEqual(sortedArray, 9)); // 4
-        System.out.println(binarySearch.findFirstEqual(sortedArray, 100)); // -1
-        System.out.println("========findFirstGe");
-        System.out.println(binarySearch.findFirstGe(sortedArray, 6)); // 3
-        System.out.println(binarySearch.findFirstGe(sortedArray, 7)); // 3
-        System.out.println(binarySearch.findFirstGe(sortedArray, 0)); // 0
-        System.out.println(binarySearch.findFirstGe(sortedArray, 9)); // 4
-        System.out.println(binarySearch.findFirstGe(sortedArray, 100)); // -1
-    }
-
     /**
      * 从有序数组中找到目标数字的所在位置
      *
