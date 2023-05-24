@@ -12,6 +12,7 @@
 	<modules>
 		<module>demo-common</module>
 		<module>demo-knife4j</module>
+		<module>demo-algorithm</module>
 	</modules>
 
 </project>
