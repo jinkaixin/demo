@@ -13,6 +13,7 @@
 		<module>demo-common</module>
 		<module>demo-knife4j</module>
 		<module>demo-algorithm</module>
+		<module>demo-blog</module>
 	</modules>
 
 </project>

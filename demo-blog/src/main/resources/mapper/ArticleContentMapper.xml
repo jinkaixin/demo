@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkx.blog.mapper.ArticleContentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jkx.blog.model.entity.ArticleContent">
+                <id column="id" property="id" jdbcType="BIGINT"/>
+                <result column="article_info_id" property="articleInfoId" jdbcType="BIGINT"/>
+                <result column="content" property="content" jdbcType="VARCHAR"/>
+                <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+                <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+                <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, article_info_id, content, create_time, update_time, is_deleted
+    </sql>
+
+</mapper>
