@@ -3,6 +3,8 @@ package com.jkx.blog.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateCategoryRequest;
 import com.jkx.blog.model.vo.ArticleVO;
 import com.jkx.common.common.DeleteRequest;
 import com.jkx.blog.model.dto.articleinfo.ArticleInfoAddRequest;
@@ -24,7 +26,7 @@ public interface ArticleInfoService extends IService<ArticleInfo> {
      * 校验
      *
      * @param entity 业务对象
-     * @param add 是否为创建校验
+     * @param add    是否为创建校验
      */
     void validPost(ArticleInfo entity, boolean add);
 
@@ -78,6 +80,7 @@ public interface ArticleInfoService extends IService<ArticleInfo> {
 
     /**
      * 获取特定文章
+     *
      * @param id
      */
     ArticleVO getArticleById(long id);
@@ -89,4 +92,28 @@ public interface ArticleInfoService extends IService<ArticleInfo> {
      * @return
      */
     Long newArticle(NewArticleRequest newArticle);
+
+    /**
+     * 删除文章
+     *
+     * @param deleteRequest
+     * @return
+     */
+    boolean deleteArticle(DeleteRequest deleteRequest);
+
+    /**
+     * 更新文章
+     *
+     * @param updateArticle
+     * @return
+     */
+    boolean updateArticle(UpdateArticleRequest updateArticle);
+
+    /**
+     * 更新分类名
+     *
+     * @param updateRequest
+     * @return
+     */
+    boolean updateCategoryName(UpdateCategoryRequest updateRequest);
 }

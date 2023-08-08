@@ -196,6 +196,40 @@ public class ArticleContentServiceImpl extends ServiceImpl<ArticleContentMapper,
         return list.get(0);
     }
 
+    @Override
+    public boolean deleteByArticleId(long articleId) {
+        if (articleId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "articleId值非法");
+        }
+
+        ArticleContent deleteCondition = new ArticleContent();
+        deleteCondition.setArticleInfoId(articleId);
+        QueryWrapper<ArticleContent> deleteWrapper = new QueryWrapper<>(deleteCondition);
+        int deleteRows = articleContentMapper.delete(deleteWrapper);
+        return deleteRows == 1;
+    }
+
+    @Override
+    public boolean updateContentByArticleId(String content, Long articleId) {
+        if (StringUtils.isBlank(content) || articleId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "内容为空或文章ID非正数");
+        }
+        // 仅本人或管理员可修改
+//        HttpServletRequest request = getHttpServletRequest();
+//        User user = userService.getLoginUser(request);
+//        if (!userService.isAdmin(request)) {
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+//        }
+        ArticleContent updateEntity = new ArticleContent();
+        updateEntity.setContent(content);
+        ArticleContent updateCondition = new ArticleContent();
+        updateCondition.setArticleInfoId(articleId);
+
+        QueryWrapper<ArticleContent> updateWrapper = new QueryWrapper<>(updateCondition);
+        int rows = articleContentMapper.update(updateEntity, updateWrapper);
+        return rows == 1;
+    }
+
     /**
      * 获得当前请求对象
      */

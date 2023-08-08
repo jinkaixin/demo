@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.base.CaseFormat;
 import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateCategoryRequest;
 import com.jkx.blog.model.entity.ArticleContent;
 import com.jkx.blog.model.vo.ArticleVO;
 import com.jkx.blog.service.ArticleContentService;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -173,6 +176,10 @@ public class ArticleInfoServiceImpl extends ServiceImpl<ArticleInfoMapper, Artic
             sortField = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sortField);
         }
         String sortOrder = queryRequest.getSortOrder();
+        // 分类名长度应小于15
+        if (StringUtils.isNotBlank(queryRequest.getCategory()) && queryRequest.getCategory().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "分类名太长，不可以大于15个字");
+        }
         // 组装查询条件
         ArticleInfo queryCondition = new ArticleInfo();
         BeanUtils.copyProperties(queryRequest, queryCondition);
@@ -213,6 +220,10 @@ public class ArticleInfoServiceImpl extends ServiceImpl<ArticleInfoMapper, Artic
         if (StringUtils.isBlank(newArticle.getTitle()) || StringUtils.isBlank(newArticle.getContent())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章标题或者内容为空");
         }
+        // 分类名非空及长度校验
+        if (StringUtils.isBlank(newArticle.getCategory()) || newArticle.getCategory().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "未设置分类或者分类名长度超过15");
+        }
         // 标题长度检查（限制长度60）
         if (newArticle.getTitle().length() > 60) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章标题长度不可大于60");
@@ -245,6 +256,118 @@ public class ArticleInfoServiceImpl extends ServiceImpl<ArticleInfoMapper, Artic
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "新增文章时存入文章内容失败");
         }
         return articleInfo.getId();
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteArticle(DeleteRequest deleteRequest) {
+        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空或ID值非法");
+        }
+        long id = deleteRequest.getId();
+        // 判断是否存在
+        ArticleInfo oldRecord = articleInfoMapper.selectById(id);
+        if (oldRecord == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 获取当前登录用户
+//        HttpServletRequest request = getHttpServletRequest();
+//        User user = userService.getLoginUser(request);
+        // 仅管理员可删除
+//        if (!userService.isAdmin(request)) {
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+//        }
+        int articleInfoDeleteRows = articleInfoMapper.deleteById(id);
+        boolean isContentDeleteSuccess = articleContentService.deleteByArticleId(id);
+        if (articleInfoDeleteRows != 1 || !isContentDeleteSuccess) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "删除失败");
+        }
+        return articleInfoDeleteRows == 1 && isContentDeleteSuccess;
+    }
+
+    @Transactional
+    @Override
+    public boolean updateArticle(UpdateArticleRequest updateArticle) {
+        if (updateArticle == null || updateArticle.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空或ID值非法");
+        }
+        // 参数校验
+        // 文章标题、内容非空校验
+        if (StringUtils.isBlank(updateArticle.getTitle()) || StringUtils.isBlank(updateArticle.getContent())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章标题或者内容为空");
+        }
+        // 分类名非空及长度校验
+        if (StringUtils.isBlank(updateArticle.getCategory()) || updateArticle.getCategory().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "未设置分类或者分类名长度超过15");
+        }
+        // 标题长度检查（限制长度60）
+        if (updateArticle.getTitle().length() > 60) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章标题长度不可大于60");
+        }
+        // 摘要字数限制200，若为空则提取内容前100个字
+        if (StringUtils.isBlank(updateArticle.getSummary())) {
+            String content = updateArticle.getContent();
+            updateArticle.setSummary(content.length() > 200 ? content.substring(0, 200) : content);
+        } else {
+            if (updateArticle.getSummary().length() > 200) {
+                updateArticle.setSummary(updateArticle.getSummary().substring(0, 200));
+            }
+        }
+        // 查询数据库记录，记录不存在则报错
+        long id = updateArticle.getId();
+        ArticleInfo oldRecord = articleInfoMapper.selectById(id);
+        if (oldRecord == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        //3.  权限校验，非管理员不可操作
+//        HttpServletRequest request = getHttpServletRequest();
+//        User user = userService.getLoginUser(request);
+//        if (!userService.isAdmin(request)) {
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+//        }
+        //4.  计算新文章字数，组装文章表及文章内容表更新实体
+        ArticleInfo articleInfo = new ArticleInfo();
+        BeanUtils.copyProperties(updateArticle, articleInfo);
+        articleInfo.setWordCount(updateArticle.getContent().length());
+        ArticleContent articleContent = new ArticleContent();
+        articleContent.setArticleInfoId(updateArticle.getId());
+        articleContent.setContent(updateArticle.getContent());
+        //5.  数据入库，放在同一个事务中进行
+        int articleInfoUpdateRows = articleInfoMapper.updateById(articleInfo);
+        boolean isContentUpdateSuccess = articleContentService.updateContentByArticleId(updateArticle.getContent(),
+                updateArticle.getId());
+        if (articleInfoUpdateRows != 1 || !isContentUpdateSuccess) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "更新失败");
+        }
+        return articleInfoUpdateRows == 1 && isContentUpdateSuccess;
+    }
+
+    @Override
+    public boolean updateCategoryName(UpdateCategoryRequest updateRequest) {
+        // 分类名非空及长度校验
+        if (StringUtils.isBlank(updateRequest.getCategory()) || updateRequest.getCategory().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "未指定分类或者分类名长度超过15");
+        }
+        // 新名称非空及长度校验
+        if (StringUtils.isBlank(updateRequest.getNewName()) || updateRequest.getNewName().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "新分类名为空或者长度超过15");
+        }
+        ArticleInfo updateEntity = new ArticleInfo();
+        updateEntity.setCategory(updateRequest.getNewName());
+        ArticleInfo condition = new ArticleInfo();
+        condition.setCategory(updateRequest.getCategory());
+        QueryWrapper<ArticleInfo> updateWrapper = new QueryWrapper<>(condition);
+
+        Integer count = articleInfoMapper.selectCount(updateWrapper);
+        if (count == null || count == 0) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "分类名输入错误，未找到任何关联文章");
+        }
+        int updateRows = articleInfoMapper.update(updateEntity, updateWrapper);
+        if (updateRows == 0) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "分类名修改失败");
+        }
+
+        return true;
     }
 
     /**

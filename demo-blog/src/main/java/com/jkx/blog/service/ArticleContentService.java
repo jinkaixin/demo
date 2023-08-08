@@ -22,7 +22,7 @@ public interface ArticleContentService extends IService<ArticleContent> {
      * 校验
      *
      * @param entity 业务对象
-     * @param add 是否为创建校验
+     * @param add    是否为创建校验
      */
     void validPost(ArticleContent entity, boolean add);
 
@@ -81,4 +81,20 @@ public interface ArticleContentService extends IService<ArticleContent> {
      * @return
      */
     ArticleContent getRecordByArticleId(long articleId);
+
+    /**
+     * 删除对应文章内容
+     *
+     * @param articleId
+     * @return
+     */
+    boolean deleteByArticleId(long articleId);
+
+    /**
+     * 更新文章内容
+     * @param content
+     * @param articleId
+     * @return
+     */
+    boolean updateContentByArticleId(String content, Long articleId);
 }

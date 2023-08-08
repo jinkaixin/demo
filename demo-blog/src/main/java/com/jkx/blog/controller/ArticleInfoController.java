@@ -2,6 +2,8 @@ package com.jkx.blog.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateCategoryRequest;
 import com.jkx.blog.model.vo.ArticleVO;
 import com.jkx.common.common.BaseResponse;
 import com.jkx.common.common.DeleteRequest;
@@ -131,9 +133,57 @@ public class ArticleInfoController {
     /**
      * 创建文章
      */
-    @PostMapping("/newarticle")
+    @PostMapping("/new/article")
     public BaseResponse<Long> newArticle(@RequestBody NewArticleRequest newArticleRequest) {
         Long recordId = articleInfoService.newArticle(newArticleRequest);
         return ResultUtils.success(recordId);
+    }
+
+    /**
+     * 根据分类查询文章列表
+     *
+     * @param queryRequest
+     * @return
+     */
+    @GetMapping("/bycategory")
+    public BaseResponse<Page<ArticleInfo>> listRecordByCategory(ArticleInfoQueryRequest queryRequest) {
+        Page<ArticleInfo> page = articleInfoService.listRecordByPage(queryRequest);
+        return ResultUtils.success(page);
+    }
+
+    /**
+     * 删除文章
+     *
+     * @param deleteRequest
+     * @return
+     */
+    @PostMapping("/delete/article")
+    public BaseResponse<Boolean> deleteArticle(@RequestBody DeleteRequest deleteRequest) {
+        boolean isSuccess = articleInfoService.deleteArticle(deleteRequest);
+        return ResultUtils.success(isSuccess);
+    }
+
+    /**
+     * 更新文章
+     *
+     * @param updateRequest
+     * @return
+     */
+    @PostMapping("/update/article")
+    public BaseResponse<Boolean> updateArticle(@RequestBody UpdateArticleRequest updateRequest) {
+        boolean isSuccess = articleInfoService.updateArticle(updateRequest);
+        return ResultUtils.success(isSuccess);
+    }
+
+    /**
+     * 更新分类名
+     *
+     * @param updateRequest
+     * @return
+     */
+    @PostMapping("/category/updatename")
+    public BaseResponse<Boolean> updateCategoryName(@RequestBody UpdateCategoryRequest updateRequest) {
+        boolean isSuccess = articleInfoService.updateCategoryName(updateRequest);
+        return ResultUtils.success(isSuccess);
     }
 }
