@@ -43,3 +43,14 @@ create table if not exists article_content
     update_time    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     is_deleted     tinyint  default 0                 not null comment '是否删除'
 ) comment '文章内容';
+
+-- 分类表
+create table if not exists category
+(
+    id             bigint auto_increment comment 'id' primary key,
+    category_name  varchar(255)                       not null comment '分类名',
+    description    varchar(1024)                      not null comment '分类描述',
+    create_time    datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_deleted     tinyint  default 0                 not null comment '是否删除'
+) comment '分类';

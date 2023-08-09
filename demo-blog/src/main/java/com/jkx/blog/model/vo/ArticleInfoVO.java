@@ -1,9 +1,6 @@
-package com.jkx.blog.model.entity;
+package com.jkx.blog.model.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,15 +12,13 @@ import java.time.LocalDateTime;
  * @since 2023-08-07
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class ArticleInfo implements Serializable {
+public class ArticleInfoVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -35,11 +30,6 @@ public class ArticleInfo implements Serializable {
      * 文章摘要
      */
     private String summary;
-
-    /**
-     * 分类ID
-     */
-    private Long categoryId;
 
     /**
      * 字数统计
@@ -57,9 +47,7 @@ public class ArticleInfo implements Serializable {
     private LocalDateTime updateTime;
 
     /**
-     * 是否删除
+     * 分类信息
      */
-    private Integer isDeleted;
-
-
+    private CategoryVO category;
 }

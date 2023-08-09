@@ -1,10 +1,9 @@
 package com.jkx.blog.model.dto.articleinfo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 文章信息修改DTO
@@ -33,9 +32,9 @@ public class ArticleInfoUpdateRequest implements Serializable {
     private String summary;
 
     /**
-     * 分类
+     * 分类ID
      */
-    private String category;
+    private Long categoryId;
 
     /**
      * 字数统计

@@ -7,16 +7,57 @@
                 <id column="id" property="id" jdbcType="BIGINT"/>
                 <result column="title" property="title" jdbcType="VARCHAR"/>
                 <result column="summary" property="summary" jdbcType="VARCHAR"/>
-                <result column="category" property="category" jdbcType="VARCHAR"/>
+                <result column="category_id" property="categoryId" jdbcType="BIGINT"/>
                 <result column="word_count" property="wordCount" jdbcType="INTEGER"/>
                 <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
                 <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
                 <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
     </resultMap>
 
+    <resultMap type="com.jkx.blog.model.vo.ArticleInfoVO" id="ContainCategoryMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="summary" property="summary" jdbcType="VARCHAR"/>
+        <result column="word_count" property="wordCount" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <association javaType="com.jkx.blog.model.vo.CategoryVO" property="category">
+            <id column="category_id" property="id" jdbcType="BIGINT"/>
+            <result column="category_name" property="categoryName" jdbcType="VARCHAR"/>
+            <result column="description" property="description" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, title, summary, category, word_count, create_time, update_time, is_deleted
     </sql>
+
+    <select id="queryPageCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM article_info t1
+        JOIN category t2
+            ON t1.category_id = t2.id
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="categoryId != null">
+                t1.category_id = #{categoryId}
+            </if>
+            AND t1.is_deleted = 0
+        </trim>
+    </select>
+
+    <select id="queryPage" resultMap="ContainCategoryMap">
+        SELECT t1.*, t2.category_name, t2.description
+        FROM article_info t1
+        JOIN category t2
+            ON t1.category_id = t2.id
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="queryRequest.categoryId != null">
+                t1.category_id = #{queryRequest.categoryId}
+            </if>
+            AND t1.is_deleted = 0
+        </trim>
+        limit #{offset}, #{size};
+    </select>
 
 </mapper>

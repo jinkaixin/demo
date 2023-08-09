@@ -1,18 +1,20 @@
 package com.jkx.blog.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jkx.blog.model.dto.articleinfo.ArticleInfoAddRequest;
+import com.jkx.blog.model.dto.articleinfo.ArticleInfoQueryRequest;
+import com.jkx.blog.model.dto.articleinfo.ArticleInfoUpdateRequest;
 import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
 import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
-import com.jkx.blog.model.dto.articleinfo.UpdateCategoryRequest;
+import com.jkx.blog.model.entity.ArticleInfo;
+import com.jkx.blog.model.vo.ArticleInfoVO;
 import com.jkx.blog.model.vo.ArticleVO;
+import com.jkx.blog.service.ArticleInfoService;
 import com.jkx.common.common.BaseResponse;
 import com.jkx.common.common.DeleteRequest;
+import com.jkx.common.common.ErrorCode;
 import com.jkx.common.common.ResultUtils;
-import com.jkx.blog.model.dto.articleinfo.ArticleInfoAddRequest;
-import com.jkx.blog.model.dto.articleinfo.ArticleInfoUpdateRequest;
-import com.jkx.blog.model.dto.articleinfo.ArticleInfoQueryRequest;
-import com.jkx.blog.model.entity.ArticleInfo;
-import com.jkx.blog.service.ArticleInfoService;
+import com.jkx.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,8 +104,8 @@ public class ArticleInfoController {
      * @return
      */
     @GetMapping("/list/page")
-    public BaseResponse<Page<ArticleInfo>> listRecordByPage(ArticleInfoQueryRequest queryRequest) {
-        Page<ArticleInfo> page = articleInfoService.listRecordByPage(queryRequest);
+    public BaseResponse<Page<ArticleInfoVO>> listRecordByPage(ArticleInfoQueryRequest queryRequest) {
+        Page<ArticleInfoVO> page = articleInfoService.listRecordByPage(queryRequest);
         return ResultUtils.success(page);
     }
 
@@ -113,8 +115,8 @@ public class ArticleInfoController {
      * @return 最近文章的信息列表
      */
     @GetMapping("/list/recent")
-    public BaseResponse<Page<ArticleInfo>> listRecent() {
-        Page<ArticleInfo> page = articleInfoService.listRecordByPage(new ArticleInfoQueryRequest());
+    public BaseResponse<Page<ArticleInfoVO>> listRecent() {
+        Page<ArticleInfoVO> page = articleInfoService.listRecordByPage(new ArticleInfoQueryRequest());
         return ResultUtils.success(page);
     }
 
@@ -146,8 +148,11 @@ public class ArticleInfoController {
      * @return
      */
     @GetMapping("/bycategory")
-    public BaseResponse<Page<ArticleInfo>> listRecordByCategory(ArticleInfoQueryRequest queryRequest) {
-        Page<ArticleInfo> page = articleInfoService.listRecordByPage(queryRequest);
+    public BaseResponse<Page<ArticleInfoVO>> listRecordByCategory(ArticleInfoQueryRequest queryRequest) {
+        if (queryRequest.getCategoryId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "检索时未指定分类");
+        }
+        Page<ArticleInfoVO> page = articleInfoService.listRecordByPage(queryRequest);
         return ResultUtils.success(page);
     }
 
@@ -172,18 +177,6 @@ public class ArticleInfoController {
     @PostMapping("/update/article")
     public BaseResponse<Boolean> updateArticle(@RequestBody UpdateArticleRequest updateRequest) {
         boolean isSuccess = articleInfoService.updateArticle(updateRequest);
-        return ResultUtils.success(isSuccess);
-    }
-
-    /**
-     * 更新分类名
-     *
-     * @param updateRequest
-     * @return
-     */
-    @PostMapping("/category/updatename")
-    public BaseResponse<Boolean> updateCategoryName(@RequestBody UpdateCategoryRequest updateRequest) {
-        boolean isSuccess = articleInfoService.updateCategoryName(updateRequest);
         return ResultUtils.success(isSuccess);
     }
 }

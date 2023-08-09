@@ -9,14 +9,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 文章信息实体类
+ * 分类实体类
  *
  * @author jkx
- * @since 2023-08-07
+ * @since 2023-08-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ArticleInfo implements Serializable {
+public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,24 +27,14 @@ public class ArticleInfo implements Serializable {
     private Long id;
 
     /**
-     * 文章标题
+     * 分类名
      */
-    private String title;
+    private String categoryName;
 
     /**
-     * 文章摘要
+     * 分类描述
      */
-    private String summary;
-
-    /**
-     * 分类ID
-     */
-    private Long categoryId;
-
-    /**
-     * 字数统计
-     */
-    private Integer wordCount;
+    private String description;
 
     /**
      * 创建时间

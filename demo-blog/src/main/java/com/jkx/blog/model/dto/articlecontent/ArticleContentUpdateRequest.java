@@ -1,10 +1,8 @@
 package com.jkx.blog.model.dto.articlecontent;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 文章内容修改DTO
@@ -31,21 +29,4 @@ public class ArticleContentUpdateRequest implements Serializable {
      * 内容
      */
     private String content;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否删除
-     */
-    private Integer isDeleted;
-
-
 }

@@ -2,15 +2,15 @@ package com.jkx.blog.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
-import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
-import com.jkx.blog.model.dto.articleinfo.UpdateCategoryRequest;
-import com.jkx.blog.model.vo.ArticleVO;
-import com.jkx.common.common.DeleteRequest;
 import com.jkx.blog.model.dto.articleinfo.ArticleInfoAddRequest;
 import com.jkx.blog.model.dto.articleinfo.ArticleInfoQueryRequest;
 import com.jkx.blog.model.dto.articleinfo.ArticleInfoUpdateRequest;
+import com.jkx.blog.model.dto.articleinfo.NewArticleRequest;
+import com.jkx.blog.model.dto.articleinfo.UpdateArticleRequest;
 import com.jkx.blog.model.entity.ArticleInfo;
+import com.jkx.blog.model.vo.ArticleInfoVO;
+import com.jkx.blog.model.vo.ArticleVO;
+import com.jkx.common.common.DeleteRequest;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public interface ArticleInfoService extends IService<ArticleInfo> {
      * @param queryRequest
      * @return 分页对象
      */
-    Page<ArticleInfo> listRecordByPage(ArticleInfoQueryRequest queryRequest);
+    Page<ArticleInfoVO> listRecordByPage(ArticleInfoQueryRequest queryRequest);
 
     /**
      * 获取特定文章
@@ -108,12 +108,4 @@ public interface ArticleInfoService extends IService<ArticleInfo> {
      * @return
      */
     boolean updateArticle(UpdateArticleRequest updateArticle);
-
-    /**
-     * 更新分类名
-     *
-     * @param updateRequest
-     * @return
-     */
-    boolean updateCategoryName(UpdateCategoryRequest updateRequest);
 }

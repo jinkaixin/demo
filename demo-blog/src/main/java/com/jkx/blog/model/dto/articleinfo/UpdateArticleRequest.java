@@ -31,9 +31,9 @@ public class UpdateArticleRequest implements Serializable {
     private String summary;
 
     /**
-     * 分类
+     * 分类ID
      */
-    private String category;
+    private Long categoryId;
 
     /**
      * 文章内容

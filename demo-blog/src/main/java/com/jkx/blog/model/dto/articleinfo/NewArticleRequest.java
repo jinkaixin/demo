@@ -3,7 +3,6 @@ package com.jkx.blog.model.dto.articleinfo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 文章信息新增DTO
@@ -27,9 +26,9 @@ public class NewArticleRequest implements Serializable {
     private String summary;
 
     /**
-     * 分类
+     * 分类ID
      */
-    private String category;
+    private Long categoryId;
 
     /**
      * 文章内容

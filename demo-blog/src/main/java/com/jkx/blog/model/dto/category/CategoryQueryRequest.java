@@ -1,15 +1,20 @@
-package com.jkx.blog.model.vo;
+package com.jkx.blog.model.dto.category;
 
+import com.jkx.common.common.PageRequest;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 分类查询DTO
+ *
  * @author jkx
- * @date 2023/8/7
+ * @since 2023-08-09
  */
 @Data
-public class ArticleVO {
+public class CategoryQueryRequest extends PageRequest implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -18,19 +23,14 @@ public class ArticleVO {
     private Long id;
 
     /**
-     * 文章标题
+     * 分类名
      */
-    private String title;
+    private String categoryName;
 
     /**
-     * 文章摘要
+     * 分类描述
      */
-    private String summary;
-
-    /**
-     * 字数统计
-     */
-    private Integer wordCount;
+    private String description;
 
     /**
      * 创建时间
@@ -41,14 +41,4 @@ public class ArticleVO {
      * 更新时间
      */
     private LocalDateTime updateTime;
-
-    /**
-     * 文章内容
-     */
-    private String content;
-
-    /**
-     * 分类信息
-     */
-    private CategoryVO category;
 }
