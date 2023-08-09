@@ -41,4 +41,9 @@ public class ArticleInfoQueryRequest extends PageRequest implements Serializable
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 关键字
+     */
+    private String keyword;
 }

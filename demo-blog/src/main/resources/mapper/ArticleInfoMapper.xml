@@ -42,6 +42,9 @@
             <if test="categoryId != null">
                 t1.category_id = #{categoryId}
             </if>
+            <if test="title != null">
+                AND t1.title like concat('%', #{title}, '%')
+            </if>
             AND t1.is_deleted = 0
         </trim>
     </select>
@@ -54,6 +57,9 @@
         <trim prefix="WHERE" prefixOverrides="AND">
             <if test="queryRequest.categoryId != null">
                 t1.category_id = #{queryRequest.categoryId}
+            </if>
+            <if test="queryRequest.title != null">
+                AND t1.title like concat('%', #{queryRequest.title}, '%')
             </if>
             AND t1.is_deleted = 0
         </trim>

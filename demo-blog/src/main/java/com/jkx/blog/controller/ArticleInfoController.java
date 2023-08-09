@@ -15,6 +15,7 @@ import com.jkx.common.common.DeleteRequest;
 import com.jkx.common.common.ErrorCode;
 import com.jkx.common.common.ResultUtils;
 import com.jkx.common.exception.BusinessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -178,5 +179,24 @@ public class ArticleInfoController {
     public BaseResponse<Boolean> updateArticle(@RequestBody UpdateArticleRequest updateRequest) {
         boolean isSuccess = articleInfoService.updateArticle(updateRequest);
         return ResultUtils.success(isSuccess);
+    }
+
+    /**
+     * 根据关键字检索文章
+     *
+     * @param queryRequest
+     * @return
+     */
+    @GetMapping("/search/keyword")
+    public BaseResponse<Page<ArticleInfoVO>> listRecordByKeyword(ArticleInfoQueryRequest queryRequest) {
+        if (StringUtils.isBlank(queryRequest.getKeyword())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "关键字为空");
+        }
+        if (queryRequest.getKeyword().length() > 15) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "关键字长度不可超过15");
+        }
+        queryRequest.setTitle(queryRequest.getKeyword());
+        Page<ArticleInfoVO> page = articleInfoService.listRecordByPage(queryRequest);
+        return ResultUtils.success(page);
     }
 }
