@@ -26,7 +26,7 @@ create table if not exists article_info
     id             bigint auto_increment comment 'id' primary key,
     title          varchar(255)                       not null comment '文章标题',
     summary        varchar(1024)                      not null comment '文章摘要',
-    category       varchar(255)                       comment '分类',
+    category_id    bigint                       comment '分类ID',
     word_count     int                                not null comment '字数统计',
     create_time    datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time    datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
