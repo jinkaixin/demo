@@ -13,6 +13,7 @@
 	<description>通用服务</description>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -26,5 +27,18 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>my-releases</id>
+			<name>Releases</name>
+			<url>http://127.0.0.1:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>my-snapshots</id>
+			<name>Snapshot</name>
+			<url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

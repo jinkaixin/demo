@@ -16,4 +16,17 @@
 		<module>demo-blog</module>
 	</modules>
 
+	<distributionManagement>
+		<repository>
+			<id>my-releases</id>
+			<name>Releases</name>
+			<url>http://127.0.0.1:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>my-snapshots</id>
+			<name>Snapshot</name>
+			<url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>
