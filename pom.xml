@@ -23,6 +23,7 @@
 		<module>demo-algorithm</module>
 		<module>demo-blog</module>
 		<module>demo-springbean</module>
+		<module>demo-thread</module>
 	</modules>
 
 	<!-- 属性说明 -->
