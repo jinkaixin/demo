@@ -14,6 +14,7 @@
 		<module>demo-knife4j</module>
 		<module>demo-algorithm</module>
 		<module>demo-blog</module>
+		<module>demo-springbean</module>
 	</modules>
 
 	<distributionManagement>
