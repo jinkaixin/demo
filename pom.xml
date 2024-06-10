@@ -24,6 +24,7 @@
 		<module>demo-blog</module>
 		<module>demo-springbean</module>
 		<module>demo-thread</module>
+		<module>demo-business-error</module>
 	</modules>
 
 	<!-- 属性说明 -->
